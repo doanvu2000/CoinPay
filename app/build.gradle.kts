@@ -59,7 +59,12 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    /*navigation*/
     implementation(libs.androidx.navigation.compose)
+    /*hilt-dagger*/
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+    /*coil*/
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 }
