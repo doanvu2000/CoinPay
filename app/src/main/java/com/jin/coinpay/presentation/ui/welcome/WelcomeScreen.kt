@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.jin.coinpay.core.util.navigatePopUpTop
-import com.jin.coinpay.presentation.ui.navigation.Screen
+import com.jin.coinpay.presentation.ui.navigation.Screens
 
 @Composable
 fun WelcomeScreen(navController: NavController) {
@@ -18,7 +18,7 @@ fun WelcomeScreen(navController: NavController) {
         Text("Welcome")
         Spacer(modifier = Modifier.height(20.dp))
         ElevatedButton(onClick = {
-            navController.navigatePopUpTop(Screen.HomeScreen.route, isPopupTop = true)
+            navController.navigatePopUpTop(Screens.HomeScreen.route, isPopupTop = true)
         }) {
             Text("Next")
         }
