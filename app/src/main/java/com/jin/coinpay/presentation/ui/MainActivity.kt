@@ -1,20 +1,21 @@
-package com.jin.coinpay.presentation.ui.home
+package com.jin.coinpay.presentation.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.jin.coinpay.core.base.theme.CoinPayTheme
+import com.jin.coinpay.presentation.ui.navigation.Navigation
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,29 +23,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             CoinPayTheme {
                 Scaffold(
-                    contentWindowInsets = WindowInsets.safeDrawing,
-                    modifier = Modifier.fillMaxSize()
+                    contentWindowInsets = WindowInsets.Companion.safeDrawing,
+                    modifier = Modifier.Companion.fillMaxSize()
                 ) { innerPadding ->
-                    Greeting(
-                        name = "Android", modifier = Modifier.padding(innerPadding)
-                    )
+                    Column(modifier = Modifier.Companion.padding(innerPadding)) {
+                        Navigation()
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!", modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CoinPayTheme {
-        Greeting("Android")
     }
 }
