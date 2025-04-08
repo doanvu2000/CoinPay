@@ -1,6 +1,5 @@
 package com.jin.coinpay.presentation.ui.splash
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,9 +15,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil3.compose.AsyncImage
 import com.jin.coinpay.R
 import com.jin.coinpay.core.util.navigatePopUpTop
 import com.jin.coinpay.presentation.ui.navigation.Screens
@@ -26,19 +25,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
+var NEXT_SCREEN = Screens.OnboardingScreen.route
+
 @Composable
 fun SplashScreen(navController: NavController) {
     LaunchedEffect(Unit) {
         delay(3000L)
         withContext(Dispatchers.Main) {
-            navController.navigatePopUpTop(Screens.WelcomeScreen.route, true)
+            navController.navigatePopUpTop(NEXT_SCREEN, true)
         }
     }
 
     Box {
-        Image(
+        AsyncImage(
             modifier = Modifier.fillMaxSize(),
-            painter = painterResource(R.drawable.splash_background),
+            model = R.drawable.splash_background,
             contentDescription = null,
             contentScale = ContentScale.FillBounds
         )
