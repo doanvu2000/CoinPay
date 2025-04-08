@@ -1,4 +1,4 @@
-package com.jin.coinpay.ui.theme
+package com.jin.coinpay.core.base.theme
 
 import androidx.compose.ui.graphics.Color
 
