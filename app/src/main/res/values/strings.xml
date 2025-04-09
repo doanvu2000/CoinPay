@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">CoinPay</string>
+    <string name="txt_next">Next</string>
+    <string name="txt_onboarding_des_1">Trusted by millions of people, part of one part</string>
+    <string name="txt_onboarding_des_2">Spend money abroad, and track your expense</string>
+    <string name="txt_onboarding_des_3">Receive Money From Anywhere In The World</string>
 </resources>

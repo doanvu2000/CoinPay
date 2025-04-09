@@ -32,7 +32,7 @@ fun SplashScreen(navController: NavController) {
     LaunchedEffect(Unit) {
         delay(3000L)
         withContext(Dispatchers.Main) {
-            navController.navigatePopUpTop(NEXT_SCREEN, true)
+            navController.navigatePopUpTop(NEXT_SCREEN)
         }
     }
 
