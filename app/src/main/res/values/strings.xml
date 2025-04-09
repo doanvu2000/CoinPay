@@ -1,7 +1,17 @@
 <resources>
     <string name="app_name">CoinPay</string>
+    <!--onboarding-->
     <string name="txt_next">Next</string>
     <string name="txt_onboarding_des_1">Trusted by millions of people, part of one part</string>
     <string name="txt_onboarding_des_2">Spend money abroad, and track your expense</string>
     <string name="txt_onboarding_des_3">Receive Money From Anywhere In The World</string>
+    <!--registration-->
+    <string name="txt_create_account">Create your Coinpay account</string>
+    <string name="txt_des_create_account">Coinpay is a powerful tool that allow you to easily send, receive, and track all your transactions.</string>
+    <string name="txt_sign_up">Sign up</string>
+    <string name="txt_log_in">Log in</string>
+    <string name="txt_privacy_part_1">By continuing you accept our </string>
+    <string name="txt_and">and</string>
+    <string name="txt_term_of_service">Terms of Service</string>
+    <string name="txt_privacy_policy">Privacy Policy</string>
 </resources>

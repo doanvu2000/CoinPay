@@ -69,7 +69,15 @@ fun OnboardingScreen(navController: NavController, viewModel: OnBoardingViewMode
             uiState, modifier = Modifier.weight(2f)
         )
 
-        ButtonNext(uiState.value.step, navController, viewModel)
+        ButtonNext(onClick = {
+            if (uiState.value.step.isLastStep()) {
+                //navigate to registration
+                navController.navigatePopUpTop(Screens.RegistrationScreen.route)
+            } else {
+                //next step
+                viewModel.nextStep()
+            }
+        })
     }
 }
 
@@ -98,9 +106,7 @@ private fun TextDescription(uiState: State<OnBoardingUiState>, modifier: Modifie
 }
 
 @Composable
-private fun ButtonNext(
-    currentStep: IntroStep, navController: NavController, viewModel: OnBoardingViewModel
-) {
+private fun ButtonNext(onClick: () -> Unit) {
     ElevatedButton(
         modifier = Modifier
             .padding(
@@ -109,13 +115,7 @@ private fun ButtonNext(
             .fillMaxWidth(), colors = ButtonDefaults.elevatedButtonColors(
             containerColor = BluePrimary
         ), onClick = {
-            if (currentStep.isLastStep()) {
-                //navigate to registration
-                navController.navigatePopUpTop(Screens.RegistrationScreen.route)
-            } else {
-                //next step
-                viewModel.nextStep()
-            }
+            onClick()
         }) {
         Text(
             text = stringResource(R.string.txt_next),
