@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,6 +18,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
@@ -24,6 +27,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,38 +53,55 @@ import com.jin.coinpay.presentation.ui.navigation.Screens
 import com.jin.coinpay.presentation.viewmodel.IntroStep
 import com.jin.coinpay.presentation.viewmodel.IntroStep.Companion.isLastStep
 import com.jin.coinpay.presentation.viewmodel.OnBoardingViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun OnboardingScreen(navController: NavController, viewModel: OnBoardingViewModel) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
-
+    val pager = rememberPagerState { IntroStep.stepCount }
+    val scope = rememberCoroutineScope()
+    
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.customColorsPalette.backgroundPrimary),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val imageSrc = viewModel.getImagSrc(isSystemInDarkTheme())
-        ImageIntro(imageSrc)
+        val currentStep = uiState.value.step
+        viewModel.updateStep(pager.currentPage)
+        val imageSrc = viewModel.getImagSrc(currentStep.ordinal, isSystemInDarkTheme())
+
+        HorizontalPager(
+            state = pager, modifier = Modifier
+                .weight(2f)
+        ) { pageIndex ->
+            Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                ImageIntro(imageSrc)
+            }
+        }
 
         IntroStepIndicator(
-            currentStep = uiState.value.step,
+            currentStep = IntroStep.entries[pager.currentPage],
             modifier = Modifier
                 .weight(1f)
                 .padding(vertical = 24.dp),
         )
 
-        TextDescription(
-            uiState.value.step.descriptionId, modifier = Modifier.weight(2f)
-        )
+        HorizontalPager(state = pager, modifier = Modifier.weight(2f)) { pageIndex ->
+            TextDescription(
+                currentStep.descriptionId, modifier = Modifier.fillMaxHeight()
+            )
+        }
 
         ButtonNext(onClick = {
-            if (uiState.value.step.isLastStep()) {
+            if (currentStep.isLastStep()) {
                 //navigate to registration
                 navController.navigatePopUpTop(Screens.RegistrationScreen.route)
             } else {
                 //next step
-                viewModel.nextStep()
+                scope.launch {
+                    pager.animateScrollToPage(pager.currentPage + 1)
+                }
             }
         })
     }

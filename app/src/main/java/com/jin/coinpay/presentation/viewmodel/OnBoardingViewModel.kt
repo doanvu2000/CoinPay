@@ -4,7 +4,6 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import com.jin.coinpay.R
-import com.jin.coinpay.presentation.viewmodel.IntroStep.Companion.isLastStep
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -33,7 +32,8 @@ enum class IntroStep(
     companion object {
         fun IntroStep.isLastStep() = this == Step3
         fun fromOrdinal(ordinal: Int) = IntroStep.entries.getOrNull(ordinal) ?: Step1
-        fun nextStep(ordinal: Int) = fromOrdinal(ordinal + 1)
+        val stepCount
+            get() = entries.size
     }
 }
 
@@ -44,21 +44,17 @@ class OnBoardingViewModel @Inject constructor() : ViewModel() {
 
     val uiState: StateFlow<OnBoardingUiState> = _uiState.asStateFlow()
 
-    fun nextStep() {
-        val oldStep = _uiState.value.step
-        if (oldStep.isLastStep()) {
-            return
-        }
-        val nextStep = IntroStep.nextStep(oldStep.ordinal)
-        _uiState.value = _uiState.value.copy(step = nextStep)
+    fun updateStep(pageIndex: Int) {
+        val step = IntroStep.fromOrdinal(pageIndex)
+        _uiState.value = _uiState.value.copy(step = step)
     }
 
-    fun getImagSrc(isSystemInDarkTheme: Boolean): Int {
-        val currentStep = _uiState.value.step
+    fun getImagSrc(currentStep: Int, isSystemInDarkTheme: Boolean): Int {
+        val step = IntroStep.fromOrdinal(currentStep)
         return if (isSystemInDarkTheme) {
-            currentStep.imageSrcDark
+            step.imageSrcDark
         } else {
-            currentStep.imageSrcLight
+            step.imageSrcLight
         }
     }
 }
