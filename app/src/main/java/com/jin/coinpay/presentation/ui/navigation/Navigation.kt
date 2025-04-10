@@ -5,8 +5,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.jin.coinpay.core.util.enterTransition
-import com.jin.coinpay.core.util.exitTransition
+import com.jin.coinpay.core.util.composableWithAnimation
 import com.jin.coinpay.presentation.ui.home.HomeScreen
 import com.jin.coinpay.presentation.ui.onboarding.OnboardingScreen
 import com.jin.coinpay.presentation.ui.registration.RegistrationScreen
@@ -31,11 +30,7 @@ fun Navigation() {
         composable(Screens.OnboardingScreen.route) {
             OnboardingScreen(navController = navController, viewModel = onBoardingViewModel)
         }
-        composable(
-            Screens.RegistrationScreen.route,
-            enterTransition = enterTransition,
-            exitTransition = exitTransition
-        ) {
+        composableWithAnimation(Screens.RegistrationScreen.route) {
             RegistrationScreen(navController = navController, viewModel = registrationViewModel)
         }
         composable(Screens.WelcomeScreen.route) {
