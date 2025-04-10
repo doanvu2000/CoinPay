@@ -9,7 +9,7 @@ fun NavOptionsBuilder.popUpToTop(navController: NavController) {
     }
 }
 
-fun NavController.navigatePopUpTop(route: String, isPopupTop: Boolean = false) {
+fun NavController.navigatePopUpTop(route: String, isPopupTop: Boolean = true) {
     val nav = this
     navigate(route) {
         if (isPopupTop) {
