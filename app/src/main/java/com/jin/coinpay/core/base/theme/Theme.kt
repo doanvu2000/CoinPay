@@ -83,6 +83,11 @@ val MaterialTheme.customColorsPalette: CustomColorsPalette
     @Composable
     @ReadOnlyComposable
     get() = LocalCustomColorsPalette.current
+
+val backgroundColor
+    @Composable
+    get() = MaterialTheme.customColorsPalette.backgroundPrimary
+
 @Composable
 fun CoinPayTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),

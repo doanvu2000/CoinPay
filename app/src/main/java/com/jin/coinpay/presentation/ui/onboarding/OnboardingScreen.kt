@@ -47,6 +47,7 @@ import com.jin.coinpay.R
 import com.jin.coinpay.core.base.theme.BluePrimary
 import com.jin.coinpay.core.base.theme.CoinPayTheme
 import com.jin.coinpay.core.base.theme.Typography
+import com.jin.coinpay.core.base.theme.backgroundColor
 import com.jin.coinpay.core.base.theme.customColorsPalette
 import com.jin.coinpay.core.util.navigatePopUpTop
 import com.jin.coinpay.presentation.ui.navigation.Screens
@@ -60,11 +61,11 @@ fun OnboardingScreen(navController: NavController, viewModel: OnBoardingViewMode
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     val pager = rememberPagerState { IntroStep.stepCount }
     val scope = rememberCoroutineScope()
-    
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.customColorsPalette.backgroundPrimary),
+            .background(backgroundColor),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val currentStep = uiState.value.step
@@ -96,7 +97,7 @@ fun OnboardingScreen(navController: NavController, viewModel: OnBoardingViewMode
         ButtonNext(onClick = {
             if (currentStep.isLastStep()) {
                 //navigate to registration
-                navController.navigatePopUpTop(Screens.RegistrationScreen.route)
+                navController.navigatePopUpTop(Screens.RegistrationScreen.route, false)
             } else {
                 //next step
                 scope.launch {
@@ -140,7 +141,7 @@ private fun ButtonNext(onClick: () -> Unit) {
             )
             .fillMaxWidth(), colors = ButtonDefaults.elevatedButtonColors(
             containerColor = BluePrimary
-        ), onClick = {
+        ), contentPadding = PaddingValues(vertical = 16.dp), onClick = {
             onClick()
         }) {
         Text(
