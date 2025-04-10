@@ -1,23 +1,29 @@
 package com.jin.coinpay.presentation.ui.onboarding
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,7 +32,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -43,7 +48,6 @@ import com.jin.coinpay.core.util.navigatePopUpTop
 import com.jin.coinpay.presentation.ui.navigation.Screens
 import com.jin.coinpay.presentation.viewmodel.IntroStep
 import com.jin.coinpay.presentation.viewmodel.IntroStep.Companion.isLastStep
-import com.jin.coinpay.presentation.viewmodel.OnBoardingUiState
 import com.jin.coinpay.presentation.viewmodel.OnBoardingViewModel
 
 @Composable
@@ -59,14 +63,15 @@ fun OnboardingScreen(navController: NavController, viewModel: OnBoardingViewMode
         val imageSrc = viewModel.getImagSrc(isSystemInDarkTheme())
         ImageIntro(imageSrc)
 
-        Spacer(Modifier.height(24.dp))
-
-        IndicatorStep(Modifier.weight(1f), uiState.value.step)
-
-        Spacer(Modifier.height(24.dp))
+        IntroStepIndicator(
+            currentStep = uiState.value.step,
+            modifier = Modifier
+                .weight(1f)
+                .padding(vertical = 24.dp),
+        )
 
         TextDescription(
-            uiState, modifier = Modifier.weight(2f)
+            uiState.value.step.descriptionId, modifier = Modifier.weight(2f)
         )
 
         ButtonNext(onClick = {
@@ -94,10 +99,10 @@ private fun ImageIntro(imagSrc: Int) {
 }
 
 @Composable
-private fun TextDescription(uiState: State<OnBoardingUiState>, modifier: Modifier) {
+private fun TextDescription(descriptionId: Int, modifier: Modifier) {
     Text(
         modifier = modifier.padding(horizontal = 16.dp, vertical = 16.dp),
-        text = stringResource(id = uiState.value.step.descriptionId),
+        text = stringResource(id = descriptionId),
         style = Typography.headlineLarge,
         fontSize = 24.sp,
         color = MaterialTheme.customColorsPalette.contentPrimary,
@@ -127,30 +132,48 @@ private fun ButtonNext(onClick: () -> Unit) {
 }
 
 @Composable
-private fun IndicatorStep(modifier: Modifier, currentStep: IntroStep) {
+fun IntroStepIndicator(
+    currentStep: IntroStep,
+    modifier: Modifier = Modifier,
+    activeColor: Color = Color(0xFF304FFE),
+    inactiveColor: Color = Color(0xFFD0D0D0),
+    activeWidth: Int = 37,
+    inactiveWidth: Int = 16,
+    animationDurationMillis: Int = 300,
+    indicatorHeight: Int = 8,
+    horizontalPadding: Int = 4,
+    indicatorCornerRadius: Int = 4,
+) {
     Row(
-        modifier = modifier, verticalAlignment = Alignment.CenterVertically
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        List(IntroStep.entries.size) { index ->
-            val isCurrentStep = currentStep.ordinal == index
-            val indicatorSize = if (isCurrentStep) {
-                DpSize(16.dp, 8.dp)
-            } else {
-                DpSize(37.dp, 8.dp)
-            }
-            val backgroundColor = if (isCurrentStep) {
-                Color(0xFF304FFE)
-            } else {
-                Color(0xFFD0D0D0)
-            }
+        LazyRow(
+            contentPadding = PaddingValues(horizontal = horizontalPadding.dp)
+        ) {
+            itemsIndexed(IntroStep.entries) { index, step ->
+                val isCurrentStep = currentStep == step
+                val width by animateDpAsState(
+                    targetValue = if (isCurrentStep) activeWidth.dp else inactiveWidth.dp,
+                    animationSpec = tween(animationDurationMillis),
+                    label = "WidthAnimation"
+                )
 
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 4.dp)
-                    .size(indicatorSize)
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(backgroundColor)
-            )
+                val backgroundColor by animateColorAsState(
+                    targetValue = if (isCurrentStep) activeColor else inactiveColor,
+                    animationSpec = tween(animationDurationMillis),
+                    label = "ColorAnimation"
+                )
+
+                Box(
+                    modifier = Modifier
+                        .padding(horizontal = horizontalPadding.dp)
+                        .width(width)
+                        .height(indicatorHeight.dp)
+                        .clip(RoundedCornerShape(indicatorCornerRadius.dp))
+                        .background(backgroundColor)
+                )
+            }
         }
     }
 }
@@ -158,8 +181,7 @@ private fun IndicatorStep(modifier: Modifier, currentStep: IntroStep) {
 @Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun OnboardingScreenPreview() {
-    val navController = rememberNavController()
     CoinPayTheme(darkTheme = false) {
-        OnboardingScreen(navController = navController, viewModel = viewModel())
+        OnboardingScreen(navController = rememberNavController(), viewModel = viewModel())
     }
 }
