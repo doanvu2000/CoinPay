@@ -41,9 +41,9 @@ fun RegistrationScreen(
         when (uiState.value.step) {
             RegisterStep.FirstScreen -> {
                 WelcomeRegisterScreen(onClickSignUp = {
-
+                    //show create account layout
                 }, onClickLogin = {
-
+                    //show login layout
                 })
             }
 
