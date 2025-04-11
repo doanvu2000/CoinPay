@@ -17,13 +17,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withLink
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,6 +32,7 @@ import com.jin.coinpay.core.base.theme.Typography
 import com.jin.coinpay.core.base.theme.White
 import com.jin.coinpay.core.base.theme.backgroundColor
 import com.jin.coinpay.core.base.theme.customColorsPalette
+import com.jin.coinpay.core.util.appendLinkAndStyle
 
 @Composable
 fun WelcomeRegisterScreen(onClickSignUp: () -> Unit, onClickLogin: () -> Unit) {
@@ -86,32 +84,34 @@ private const val PRIVACY_POLICY_URL = "https://github.com/doanvu2000/CoinPay"
 
 @Composable
 private fun Footer(modifier: Modifier) {
+    val linkStyle = SpanStyle(
+        color = BluePrimary, textDecoration = TextDecoration.Underline
+    )
+
     Text(
         modifier = modifier,
         text = buildAnnotatedString {
             append(stringResource(R.string.txt_privacy_part_1) + "\n")
 
-            withLink(LinkAnnotation.Url(TERMS_OF_SERVICE_URL)) {
-                withStyle(
-                    style = SpanStyle(
-                        color = BluePrimary, textDecoration = TextDecoration.Underline
-                    )
-                ) {
-                    append(stringResource(R.string.txt_term_of_service))
-                }
-            }
+            appendLinkAndStyle(
+                spanStyle = linkStyle,
+                text = stringResource(R.string.txt_term_of_service),
+                url = TERMS_OF_SERVICE_URL
+            )
 
             append(" " + stringResource(R.string.txt_and) + " ")
 
-            withLink(LinkAnnotation.Url(PRIVACY_POLICY_URL)) {
-                withStyle(
-                    style = SpanStyle(
-                        color = BluePrimary, textDecoration = TextDecoration.Underline
-                    )
-                ) {
-                    append(stringResource(R.string.txt_privacy_policy))
-                }
-            }
+            appendLinkAndStyle(
+                spanStyle = linkStyle,
+                text = stringResource(R.string.txt_privacy_policy),
+                url = PRIVACY_POLICY_URL
+            )
+
+//            withLink(LinkAnnotation.Url(PRIVACY_POLICY_URL)) {
+//                withStyle(style = linkStyle) {
+//                    append(stringResource(R.string.txt_privacy_policy))
+//                }
+//            }
         },
         color = MaterialTheme.customColorsPalette.contentPrimary,
         style = Typography.headlineSmall,

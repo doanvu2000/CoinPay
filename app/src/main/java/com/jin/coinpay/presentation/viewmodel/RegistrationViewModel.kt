@@ -9,8 +9,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed class RegisterStep() {
-    object FirstScreen : RegisterStep()
-    object SecondStep : RegisterStep()
+    object FirstScreen : RegisterStep() //create coin-pay account
+    object SecondStep : RegisterStep() // create an account
 }
 
 data class RegistrationUiState(
